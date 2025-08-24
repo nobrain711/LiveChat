@@ -1,0 +1,8 @@
+# python 모듈화 시 자동생성 제외
+__pycache__
+
+# VS code 설정파일 제외
+.vscode/
+
+# docker 배포 제외 설정 관련 제외
+.devcontainer

@@ -1,0 +1,59 @@
+services:
+  # DataBase(postgres) 서비스 설정
+  db:
+    # postgres 이미지 사용
+    image: postgres:15
+    # 재시작 정책 설정
+    # 항상 재시작
+    restart: always
+    # postgres 환경 변수 설정
+    # 데이터베이스 사용자, 비밀번호, 데이터베이스 이름, 시간대 설정
+    environment:
+      POSTGRES_USER: chat
+      POSTGRES_PASSWORD:  dev2025
+      POSTGRES_DB: chat
+      TZ: Asia/Seoul
+    # 데이터베이스 파일 저장소 설정
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    # 데이터베이스 포트 설정
+    # 현재 호스트와 컨테이너의 5432 포트를 연결
+    # CD환경으로 설정 예정
+    ports:
+      - "5432:5432"
+
+  # chat 서비스 설정
+  web:
+    # build 설정
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    # workdir 설정
+    working_dir: /app
+    # chat 서비스의 의존성 설정
+    # db를 의존성에 추가
+    depends_on:
+      - db
+    # command로 fastapi를 실행
+    command: >
+      uvicorn main:app --host 0.0.0.0 --port 8000 --loop uvloop --http httptools --ws websockets
+    # chat 서비스의 포트 설정
+    ports:
+      - "8000:8000"
+    # 환경 변수 설정
+    # 추후에 JWT 인증 추가
+    environment: 
+      # Database URL 설정
+      DATABASE_URL: postgresql://chat:dev2025@db:5432/chat
+      # 시간대 설정
+      TZ: Asia/Seoul
+    # 저장소 설정
+    volumes:
+      - ../app:/app
+
+    # 환경 변수 파일 설정
+    # env_file:
+    #   - .env/.env
+
+volumes:
+  db_data:
