@@ -25,6 +25,8 @@ services:
   # chat 서비스 설정
   web:
     # build 설정
+    # Dockerfile을 사용하여 이미지를 빌드
+    # context: .. -> 상위 디렉토리를 컨텍스트로 사용
     build:
       context: ..
       dockerfile: docker/Dockerfile
@@ -34,9 +36,16 @@ services:
     # db를 의존성에 추가
     depends_on:
       - db
-    # command로 fastapi를 실행
+    # command로 api를 실행
+    # uvicorn -> 디버깅 모드로 실행
+    # main:app -> FastAPI 애플리케이션
+    # --host 0.0.0.0 -> 모든 IP에서 접근 가능
+    # --port 8000 -> 포트 8000에서 실행
+    # --loop uvloop -> 비동기 루프 설정
+    # --http httptools -> HTTP 프로토콜 설정
+    # --ws websockets -> WebSocket 설정
     command: >
-      uvicorn main:app --host 0.0.0.0 --port 8000 --loop uvloop --http httptools --ws websockets
+      uvicorn main:app --host 0.0.0.0 --port 8000 --loop uvloop --http httptools --ws websockets --reload
     # chat 서비스의 포트 설정
     ports:
       - "8000:8000"
