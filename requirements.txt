@@ -2,6 +2,7 @@
 fastAPI==0.116.1
 uvicorn[standard]==0.22.0
 pydantic==2.11.7
+pydantic-settings==2.10.1
 orjson==3.11.2
 
 # DB 및 ORM
@@ -13,3 +14,6 @@ asyncpg==0.29.0        # 비동기용 드라이버
 pytest==8.4.1
 pytest-asyncio==0.23.8
 httpx==0.27.0
+
+# 로그 관련
+python-json-logger==2.0.7

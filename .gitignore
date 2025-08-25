@@ -6,3 +6,6 @@ __pycache__
 
 # docker 배포 제외 설정 관련 제외
 .devcontainer
+
+# log관련 제외
+logs/
