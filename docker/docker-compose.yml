@@ -1,8 +1,10 @@
 services:
   # DataBase(postgres) 서비스 설정
   db:
-    # postgres 이미지 사용
-    image: postgres:15
+    # dockerfile를 사용하여 이미지를 빌드
+    build:
+      context: ..
+      dockerfile: docker/postgres.Dockerfile
     # 재시작 정책 설정
     # 항상 재시작
     restart: always
@@ -12,7 +14,13 @@ services:
       POSTGRES_USER: chat
       POSTGRES_PASSWORD:  dev2025
       POSTGRES_DB: chat
+      POSTGRES_ENCODING: UTF-8
+      POSTGRES_COLLATION: "ko_kr.UTF-8"
+      POSTGRES_CTYPE: "ko_kr.UTF-8"
+      POSTGRES_TIMEZONE: Asia/Seoul
       TZ: Asia/Seoul
+      # 내부 DataBase의 인코딩 설정
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --lc-collate=ko_KR.UTF-8 --lc-ctype=ko_KR.UTF-8"
     # 데이터베이스 파일 저장소 설정
     volumes:
       - db_data:/var/lib/postgresql/data
@@ -29,7 +37,7 @@ services:
     # context: .. -> 상위 디렉토리를 컨텍스트로 사용
     build:
       context: ..
-      dockerfile: docker/Dockerfile
+      dockerfile: docker/fastapi.Dockerfile
     # workdir 설정
     working_dir: /app
     # chat 서비스의 의존성 설정
